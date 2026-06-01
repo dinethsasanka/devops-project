@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>DevOps Notes App</title></head>
+<body>
+  <h1>My Notes</h1>
+  <form action="/add" method="POST">
+    <input type="text" name="content" placeholder="Write a note..." required>
+    <button type="submit">Add</button>
+  </form>
+  <ul>
+    {% for note in notes %}
+      <li>{{ note.content }} — <a href="/delete/{{ note.id }}">delete</a></li>
+    {% endfor %}
+  </ul>
+</body>
+</html>
