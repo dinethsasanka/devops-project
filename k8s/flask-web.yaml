@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-web-deployment
+  namespace: notes-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-web
+  template:
+    metadata:
+      labels:
+        app: flask-web
+    spec:
+      containers:
+        - name: flask-web
+          image: cptsparrow2002/notes-web:latest
+          ports:
+            - containerPort: 5000
+          envFrom:
+            - configMapRef:
+                name: notes-config
+            - secretRef:
+                name: notes-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-web-service
+  namespace: notes-app
+spec:
+  selector:
+    app: flask-web
+  ports:
+    - port: 5000
+      targetPort: 5000
+  type: ClusterIP
+

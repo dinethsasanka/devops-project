@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-api-deployment
+  namespace: notes-app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: flask-api
+  template:
+    metadata:
+      labels:
+        app: flask-api
+    spec:
+      containers:
+        - name: flask-api
+          image: cptsparrow2002/notes-api:latest
+          ports:
+            - containerPort: 5001
+          envFrom:
+            - configMapRef:
+                name: notes-config
+            - secretRef:
+                name: notes-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-api-service
+  namespace: notes-app
+spec:
+  selector:
+    app: flask-api
+  ports:
+    - port: 5001
+      targetPort: 5001
+  type: ClusterIP
