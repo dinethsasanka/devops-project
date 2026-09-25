@@ -53,6 +53,8 @@ jobs:
           username: ${{ secrets.K8S_USER }}
           key: ${{ secrets.K8S_SSH_KEY }}
           script: |
+            export KUBECONFIG=/home/deployuser/.kube/config
+
             kubectl set image deployment/flask-web-deployment \
               flask-web=${{ secrets.DOCKER_USERNAME }}/notes-web:${{ github.sha }} \
               -n notes-app
