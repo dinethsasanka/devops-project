@@ -3,32 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Notes App</title>
+  <title>Notes App — v2.0</title>
   <style>
     :root {
-      --bg: #f0f2f5;
-      --surface: #ffffff;
-      --text: #1a1a2e;
-      --text-muted: #888;
-      --border: #e2e8f0;
-      --input-bg: #f8fafc;
-      --pill-bg: #f0f2f5;
-      --pill-text: #555;
-      --shadow: 0 1px 4px rgba(0,0,0,0.06);
-      --shadow-hover: 0 4px 12px rgba(102,126,234,0.15);
-    }
-
-    [data-theme="dark"] {
-      --bg: #0f0f1a;
-      --surface: #1a1a2e;
-      --text: #e8e8f0;
-      --text-muted: #666;
+      --accent: #f97316;
+      --accent2: #ef4444;
+      --bg: #0a0a0f;
+      --surface: #13131f;
+      --surface2: #1c1c2e;
       --border: #2a2a40;
-      --input-bg: #0f0f1a;
-      --pill-bg: #0f0f1a;
-      --pill-text: #aaa;
-      --shadow: 0 1px 4px rgba(0,0,0,0.3);
-      --shadow-hover: 0 4px 12px rgba(102,126,234,0.25);
+      --text: #f0f0fa;
+      --muted: #6b6b8a;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,17 +23,40 @@
       background: var(--bg);
       min-height: 100vh;
       color: var(--text);
-      transition: background 0.3s, color 0.3s;
     }
 
+    /* ── deploy banner ── */
+    .deploy-banner {
+      background: linear-gradient(90deg, #f97316, #ef4444);
+      padding: 8px 0;
+      text-align: center;
+    }
+
+    .deploy-banner span {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+
+    .deploy-banner code {
+      background: rgba(0,0,0,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.74rem;
+      margin-left: 8px;
+      font-family: monospace;
+    }
+
+    /* ── header ── */
     header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       padding: 20px 0;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
     .header-inner {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 0 24px;
       display: flex;
@@ -56,11 +64,37 @@
       justify-content: space-between;
     }
 
-    header h1 {
-      color: white;
-      font-size: 1.5rem;
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #f97316, #ef4444);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+
+    .logo h1 {
+      font-size: 1.25rem;
       font-weight: 700;
-      letter-spacing: -0.5px;
+      color: var(--text);
+    }
+
+    .logo .version {
+      font-size: 0.68rem;
+      background: linear-gradient(135deg, #f97316, #ef4444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+      margin-left: 2px;
     }
 
     .header-right {
@@ -69,68 +103,102 @@
       gap: 10px;
     }
 
-    .health-badge {
+    .api-pill {
       display: flex;
       align-items: center;
       gap: 6px;
-      background: rgba(255,255,255,0.15);
-      color: white;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 5px 11px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 5px 12px;
       border-radius: 20px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      font-weight: 600;
     }
 
-    .health-dot {
-      width: 7px;
-      height: 7px;
+    .api-dot {
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: #ccc;
+      background: var(--muted);
       transition: background 0.4s;
     }
 
-    .health-dot.up { background: #4ade80; }
-    .health-dot.down { background: #f87171; }
+    .api-dot.up { background: #4ade80; box-shadow: 0 0 6px #4ade8080; }
+    .api-dot.down { background: #f87171; }
 
-    .dark-toggle {
-      background: rgba(255,255,255,0.15);
-      border: none;
-      color: white;
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s;
-    }
-
-    .dark-toggle:hover { background: rgba(255,255,255,0.25); }
-
+    /* ── container ── */
     .container {
-      max-width: 720px;
+      max-width: 760px;
       margin: 0 auto;
       padding: 32px 24px;
     }
 
-    .add-card {
+    /* ── what's new card ── */
+    .whats-new {
       background: var(--surface);
-      border-radius: 16px;
-      padding: 24px;
-      margin-bottom: 24px;
-      box-shadow: var(--shadow);
-      transition: background 0.3s;
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 12px;
+      padding: 18px 20px;
+      margin-bottom: 28px;
     }
 
-    .add-card h2 {
-      font-size: 0.78rem;
+    .whats-new-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .whats-new-header span {
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 1px;
-      color: var(--text-muted);
-      margin-bottom: 14px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .whats-new ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .whats-new ul li {
+      font-size: 0.85rem;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .whats-new ul li::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    /* ── add card ── */
+    .add-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 24px;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
       font-weight: 600;
+      margin-bottom: 13px;
     }
 
     .input-row {
@@ -142,71 +210,64 @@
       flex: 1;
       padding: 11px 15px;
       border: 1.5px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.95rem;
+      border-radius: 9px;
+      font-size: 0.92rem;
       outline: none;
-      transition: border-color 0.2s, background 0.3s;
       color: var(--text);
-      background: var(--input-bg);
+      background: var(--surface2);
+      transition: border-color 0.2s;
     }
 
     .input-row input:focus, .search-input:focus {
-      border-color: #667eea;
+      border-color: var(--accent);
+    }
+
+    .input-row input::placeholder, .search-input::placeholder {
+      color: var(--muted);
     }
 
     .input-row button {
-      padding: 11px 20px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+      padding: 11px 22px;
+      background: linear-gradient(135deg, #f97316, #ef4444);
       color: white;
       border: none;
-      border-radius: 10px;
-      font-size: 0.92rem;
-      font-weight: 600;
+      border-radius: 9px;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
       transition: opacity 0.2s;
       white-space: nowrap;
     }
 
-    .input-row button:hover { opacity: 0.88; }
+    .input-row button:hover { opacity: 0.85; }
 
+    /* ── toolbar ── */
     .toolbar {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
       gap: 12px;
+      margin-bottom: 14px;
     }
 
-    .notes-label {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--text-muted);
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .search-wrap {
-      flex: 1;
-      max-width: 280px;
-    }
+    .search-wrap { flex: 1; }
 
     .search-input {
       width: 100%;
-      padding: 8px 13px;
+      padding: 9px 14px;
       font-size: 0.88rem;
     }
 
-    .count-badge {
-      background: #667eea;
+    .count-pill {
+      background: linear-gradient(135deg, #f97316, #ef4444);
       color: white;
       font-size: 0.72rem;
       font-weight: 700;
-      padding: 2px 9px;
+      padding: 3px 10px;
       border-radius: 12px;
       white-space: nowrap;
     }
 
+    /* ── note cards ── */
     .notes-list {
       display: flex;
       flex-direction: column;
@@ -215,45 +276,43 @@
 
     .note-card {
       background: var(--surface);
-      border-radius: 13px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
       padding: 16px 18px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--shadow);
-      transition: box-shadow 0.2s, transform 0.15s, background 0.3s;
-      border-left: 4px solid #667eea;
+      transition: border-color 0.2s, transform 0.15s;
+      border-left: 3px solid var(--accent);
     }
 
     .note-card:hover {
-      box-shadow: var(--shadow-hover);
-      transform: translateY(-1px);
+      border-color: var(--accent);
+      transform: translateX(3px);
     }
 
     .note-card.hidden { display: none; }
 
-    .note-content { flex: 1; }
-
     .note-text {
-      font-size: 0.97rem;
+      font-size: 0.95rem;
       color: var(--text);
       font-weight: 500;
       line-height: 1.5;
     }
 
     .note-meta {
-      font-size: 0.76rem;
-      color: var(--text-muted);
+      font-size: 0.74rem;
+      color: var(--muted);
       margin-top: 3px;
     }
 
     .delete-btn {
       background: none;
-      border: 1.5px solid var(--border);
-      color: #d9534f;
+      border: 1px solid var(--border);
+      color: var(--muted);
       padding: 5px 13px;
-      border-radius: 8px;
-      font-size: 0.8rem;
+      border-radius: 7px;
+      font-size: 0.78rem;
       cursor: pointer;
       font-weight: 600;
       transition: all 0.2s;
@@ -262,86 +321,109 @@
     }
 
     .delete-btn:hover {
-      background: #d9534f;
+      background: #ef4444;
       color: white;
-      border-color: #d9534f;
+      border-color: #ef4444;
     }
 
     .no-results {
       display: none;
       text-align: center;
       padding: 30px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
+      color: var(--muted);
+      font-size: 0.88rem;
     }
 
     .empty-state {
       text-align: center;
       padding: 50px 24px;
       background: var(--surface);
-      border-radius: 16px;
-      box-shadow: var(--shadow);
-      transition: background 0.3s;
+      border: 1px solid var(--border);
+      border-radius: 14px;
     }
 
-    .empty-icon { font-size: 2.2rem; margin-bottom: 10px; }
+    .empty-icon { font-size: 2rem; margin-bottom: 10px; }
+    .empty-state p { color: var(--muted); font-size: 0.9rem; }
 
-    .empty-state p {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .stack-info {
+    /* ── stack bar ── */
+    .stack-bar {
       margin-top: 36px;
       background: var(--surface);
-      border-radius: 13px;
-      padding: 16px 18px;
-      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 18px;
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
       align-items: center;
-      transition: background 0.3s;
+      gap: 8px;
     }
 
     .stack-label {
-      font-size: 0.75rem;
-      color: var(--text-muted);
+      font-size: 0.72rem;
+      color: var(--muted);
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
 
     .stack-pill {
-      background: var(--pill-bg);
-      color: var(--pill-text);
-      font-size: 0.76rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.74rem;
       font-weight: 600;
       padding: 3px 10px;
       border-radius: 20px;
-      transition: background 0.3s;
+    }
+
+    .stack-pill.highlight {
+      border-color: var(--accent);
+      color: var(--accent);
     }
   </style>
 </head>
 <body>
 
+<div class="deploy-banner">
+  <span>
+    🚀 Deployed via GitHub Actions + Kubernetes
+    <code id="sha-display">loading...</code>
+  </span>
+</div>
+
 <header>
   <div class="header-inner">
-    <h1>My Notes</h1>
-    <div class="header-right">
-      <div class="health-badge">
-        <div class="health-dot" id="health-dot"></div>
-        <span id="health-label">API</span>
+    <div class="logo">
+      <div class="logo-icon">📝</div>
+      <div>
+        <h1>Notes App <span class="version">v2.0</span></h1>
       </div>
-      <button class="dark-toggle" onclick="toggleDark()" id="dark-btn" title="Toggle dark mode">🌙</button>
+    </div>
+    <div class="header-right">
+      <div class="api-pill">
+        <div class="api-dot" id="api-dot"></div>
+        <span id="api-label">checking API</span>
+      </div>
     </div>
   </div>
 </header>
 
 <div class="container">
 
+  <div class="whats-new">
+    <div class="whats-new-header">
+      <span>⚡ What's new in v2.0</span>
+    </div>
+    <ul>
+      <li>New dark theme deployed automatically via GitHub Actions CI/CD pipeline</li>
+      <li>Live API health indicator — checks Flask API service every 30 seconds</li>
+      <li>Real-time note search with live count filtering</li>
+      <li>Full Kubernetes deployment — 2 Flask replicas, zero-downtime rolling updates</li>
+    </ul>
+  </div>
+
   <div class="add-card">
-    <h2>New Note</h2>
+    <div class="section-label">New Note</div>
     <form action="/add" method="POST">
       <div class="input-row">
         <input
@@ -351,23 +433,22 @@
           required
           autofocus
         >
-        <button type="submit">Add</button>
+        <button type="submit">Add Note</button>
       </div>
     </form>
   </div>
 
   <div class="toolbar">
-    <span class="notes-label">Notes</span>
+    <div class="section-label" style="white-space:nowrap">Your Notes</div>
     <div class="search-wrap">
       <input
         type="text"
         class="search-input"
-        placeholder="Search notes..."
+        placeholder="Search..."
         oninput="filterNotes(this.value)"
-        id="search-input"
       >
     </div>
-    <span class="count-badge" id="count-badge">{{ notes|length }}</span>
+    <span class="count-pill" id="count-badge">{{ notes|length }}</span>
   </div>
 
   <div class="notes-list" id="notes-list">
@@ -392,7 +473,7 @@
     {% endif %}
   </div>
 
-  <div class="stack-info">
+  <div class="stack-bar">
     <span class="stack-label">Stack</span>
     <span class="stack-pill">Flask</span>
     <span class="stack-pill">Nginx</span>
@@ -400,29 +481,29 @@
     <span class="stack-pill">Redis</span>
     <span class="stack-pill">Docker</span>
     <span class="stack-pill">Kubernetes</span>
-    <span class="stack-pill">GitHub Actions</span>
+    <span class="stack-pill highlight">GitHub Actions</span>
   </div>
 
 </div>
 
 <script>
-  const totalNotes = Number('{{ notes|length }}');
+  const totalNotes = Number("{{ notes|length }}");
 
-  async function checkHealth() {
-    const dot = document.getElementById('health-dot');
-    const label = document.getElementById('health-label');
+  async function checkApi() {
+    const dot = document.getElementById('api-dot');
+    const label = document.getElementById('api-label');
     try {
       const res = await fetch('/api/health');
       const data = await res.json();
       if (data.status === 'ok') {
-        dot.className = 'health-dot up';
+        dot.className = 'api-dot up';
         label.textContent = 'API online';
       } else {
-        dot.className = 'health-dot down';
+        dot.className = 'api-dot down';
         label.textContent = 'API error';
       }
     } catch {
-      dot.className = 'health-dot down';
+      dot.className = 'api-dot down';
       label.textContent = 'API offline';
     }
   }
@@ -442,27 +523,24 @@
 
     badge.textContent = q ? `${visible}/${totalNotes}` : totalNotes;
     if (noResults) {
-      noResults.style.display = visible === 0 && q ? 'block' : 'none';
+      noResults.style.display = (visible === 0 && q) ? 'block' : 'none';
     }
   }
 
-  function toggleDark() {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    document.documentElement.setAttribute('data-theme', isDark ? '' : 'dark');
-    document.getElementById('dark-btn').textContent = isDark ? '🌙' : '☀️';
-    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  async function loadSha() {
+    try {
+      const res = await fetch('/api/health');
+      const data = await res.json();
+      const sha = data.sha || 'latest';
+      document.getElementById('sha-display').textContent = sha.slice(0, 7);
+    } catch {
+      document.getElementById('sha-display').textContent = 'latest';
+    }
   }
 
-  (function initTheme() {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'dark') {
-      document.documentElement.setAttribute('data-theme', 'dark');
-      document.getElementById('dark-btn').textContent = '☀️';
-    }
-  })();
-
-  checkHealth();
-  setInterval(checkHealth, 30000);
+  checkApi();
+  loadSha();
+  setInterval(checkApi, 30000);
 </script>
 
 </body>
