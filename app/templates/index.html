@@ -1,16 +1,308 @@
 <!DOCTYPE html>
-<html>
-<head><title>DevOps Notes App</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notes App</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+      color: #1a1a2e;
+    }
+
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 24px 0;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .header-inner {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      color: white;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.2);
+      color: white;
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+
+    .add-card {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .add-card h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .input-row input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      color: #1a1a2e;
+      background: #f8fafc;
+    }
+
+    .input-row input:focus {
+      border-color: #667eea;
+      background: white;
+    }
+
+    .input-row button {
+      padding: 12px 22px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+      white-space: nowrap;
+    }
+
+    .input-row button:hover { opacity: 0.88; }
+
+    .notes-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .notes-header h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #888;
+      font-weight: 600;
+    }
+
+    .count-badge {
+      background: #667eea;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 12px;
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .note-card {
+      background: white;
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      transition: box-shadow 0.2s, transform 0.15s;
+      border-left: 4px solid #667eea;
+    }
+
+    .note-card:hover {
+      box-shadow: 0 4px 12px rgba(102,126,234,0.15);
+      transform: translateY(-1px);
+    }
+
+    .note-content {
+      flex: 1;
+    }
+
+    .note-text {
+      font-size: 1rem;
+      color: #1a1a2e;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .note-meta {
+      font-size: 0.78rem;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    .delete-btn {
+      background: none;
+      border: 1.5px solid #f0e0e0;
+      color: #d9534f;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-left: 16px;
+      white-space: nowrap;
+    }
+
+    .delete-btn:hover {
+      background: #d9534f;
+      color: white;
+      border-color: #d9534f;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    }
+
+    .empty-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+    }
+
+    .empty-state p {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+
+    .stack-info {
+      margin-top: 40px;
+      background: white;
+      border-radius: 14px;
+      padding: 18px 20px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stack-label {
+      font-size: 0.78rem;
+      color: #aaa;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stack-pill {
+      background: #f0f2f5;
+      color: #555;
+      font-size: 0.78rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+  </style>
+</head>
 <body>
-  <h1>My Notes — Deployed via Git Hook - 5</h1>
-  <form action="/add" method="POST">
-    <input type="text" name="content" placeholder="Write a note..." required>
-    <button type="submit">Add</button>
-  </form>
-  <ul>
-    {% for note in notes %}
-      <li>{{ note.content }} — <a href="/delete/{{ note.id }}">delete</a></li>
-    {% endfor %}
-  </ul>
+
+<header>
+  <div class="header-inner">
+    <h1>My Notes</h1>
+    <span class="badge">GitHub Actions + Kubernetes</span>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="add-card">
+    <h2>New Note</h2>
+    <form action="/add" method="POST">
+      <div class="input-row">
+        <input
+          type="text"
+          name="content"
+          placeholder="Write something..."
+          required
+          autofocus
+        >
+        <button type="submit">Add Note</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="notes-header">
+    <h2>Your Notes</h2>
+    <span class="count-badge">{{ notes|length }}</span>
+  </div>
+
+  <div class="notes-list">
+    {% if notes %}
+      {% for note in notes %}
+      <div class="note-card">
+        <div class="note-content">
+          <div class="note-text">{{ note.content }}</div>
+          <div class="note-meta">{{ note.created_at }}</div>
+        </div>
+        <a href="/delete/{{ note.id }}">
+          <button class="delete-btn">Delete</button>
+        </a>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div class="empty-state">
+        <div class="empty-icon">📝</div>
+        <p>No notes yet. Add your first one above.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="stack-info">
+    <span class="stack-label">Stack</span>
+    <span class="stack-pill">Flask</span>
+    <span class="stack-pill">Nginx</span>
+    <span class="stack-pill">MariaDB</span>
+    <span class="stack-pill">Redis</span>
+    <span class="stack-pill">Docker</span>
+    <span class="stack-pill">Kubernetes</span>
+    <span class="stack-pill">GitHub Actions</span>
+  </div>
+
+</div>
+
 </body>
 </html>
