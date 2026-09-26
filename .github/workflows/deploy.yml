@@ -63,6 +63,10 @@ jobs:
               flask-api=${{ secrets.DOCKER_USERNAME }}/notes-api:${{ github.sha }} \
               -n notes-app
 
+            kubectl set env deployment/flask-api-deployment \
+              GIT_SHA=${{ github.sha }} \
+              -n notes-app
+
             kubectl rollout status deployment/flask-web-deployment \
               -n notes-app --timeout=120s
 

@@ -27,6 +27,14 @@ def get_db():
 def health():
     return jsonify({"status": "ok", "service": "notes-api"})
 
+@app.route("/api/health")
+def health():
+    return jsonify({
+        "status": "ok",
+        "service": "notes-api",
+        "sha": os.getenv("GIT_SHA", "dev")
+    })
+
 # Get all notes
 @app.route("/api/notes")
 def get_notes():
