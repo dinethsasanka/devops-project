@@ -23,18 +23,28 @@ This project evolved through 5 Phases to demonstrate the complete DevOps lifecyc
      
   4. Phase 4 - Kubernetes
      Create following manifest files:
-          1. namespace.yaml-Isolated notes-app namespace
-          2.configmap.yaml-Non-sensitive config (hostnames, DB name)
-          3.secret.yaml-Base64-encoded passwords
-          4.mariadb-pvc.yaml-1Gi PersistentVolumeClaim for database storage
-          5.mariadb.yaml-Deployment + ClusterIP Service
-          6.redis.yaml-Deployment + ClusterIP Service
-          7.flask-web.yaml-Deployment + ClusterIP Service
-          8.flask-api.yaml-Deployment + ClusterIP Service
-          9.nginx-config.yaml-ConfigMap holding Nginx routing config
-          10.nginx.yaml-Deployment + NodePort Service (port 30362)
+
+      1. namespace.yaml-Isolated notes-app namespace
+
+     2.configmap.yaml-Non-sensitive config (hostnames, DB name)
+
+     3.secret.yaml-Base64-encoded passwords
+
+      4.mariadb-pvc.yaml-1Gi PersistentVolumeClaim for database storage
+
+      5.mariadb.yaml-Deployment + ClusterIP Service
+
+      6.redis.yaml-Deployment + ClusterIP Service
+
+     7.flask-web.yaml-Deployment + ClusterIP Service
+
+      8.flask-api.yaml-Deployment + ClusterIP Service
+
+      9.nginx-config.yaml-ConfigMap holding Nginx routing config
+
+      10.nginx.yaml-Deployment + NodePort Service (port 30362)
      
-  5. Phase 5 - CICD
+  6. Phase 5 - CICD
      git push origin main
         │
         ▼
