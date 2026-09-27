@@ -53,7 +53,11 @@ jobs:
           username: ${{ secrets.K8S_USER }}
           key: ${{ secrets.K8S_SSH_KEY }}
           script: |
-            export KUBECONFIG=/home/deployuser/.kube/config
+            export KUBECONFIG=/home/deployuser/.kube/
+            
+            kubectl set env deployment/flask-api-deployment \
+              GIT_SHA=${{ github.sha }} \
+              -n notes-app
 
             kubectl set image deployment/flask-web-deployment \
               flask-web=${{ secrets.DOCKER_USERNAME }}/notes-web:${{ github.sha }} \
@@ -61,10 +65,6 @@ jobs:
 
             kubectl set image deployment/flask-api-deployment \
               flask-api=${{ secrets.DOCKER_USERNAME }}/notes-api:${{ github.sha }} \
-              -n notes-app
-
-            kubectl set env deployment/flask-api-deployment \
-              GIT_SHA=${{ github.sha }} \
               -n notes-app
 
             kubectl rollout status deployment/flask-web-deployment \

@@ -23,9 +23,6 @@ def get_db():
     )
 
 # Health check endpoint
-@app.route("/api/health")
-def health():
-    return jsonify({"status": "ok", "service": "notes-api"})
 
 @app.route("/api/health")
 def health():
